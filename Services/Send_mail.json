@@ -2,7 +2,7 @@
   "service": {
     "specVersion": "v3",
     "catalog_metadata": {
-      "name": "Send mail",
+      "name": "Send Mail using Shared Parameters",
       "description": "Sample test for send a mail.",
       "image": "serviceicon_1.svg",
       "category": "CloudServices",
@@ -35,9 +35,9 @@
                 "receiverList": "${datatypes.mail_receiver.mail_receiver}",
                 "id": "emailnot611c76b5",
                 "sender": "CAMadmin",
-                "copyToList": "",
-                "subject": "Test send mail",
-                "body": "Hello, this is just a test mail.",
+                "copyToList": "${datatypes.mail_cc.mail_cc}\"",
+                "subject": "${datatypes.mail_content.mail_content}\"",
+                "body": "${datatypes.mail_box.mail_box}\"",
                 "warning": false,
                 "error": false
               }

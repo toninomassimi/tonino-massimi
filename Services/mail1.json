@@ -3,7 +3,7 @@
     "specVersion": "v3",
     "catalog_metadata": {
       "name": "Send mail1",
-      "description": "Sample test for send a mail.",
+      "description": "Sample test for send a mail1.",
       "image": "serviceicon_1.svg",
       "category": "CloudServices",
       "bullets": [],

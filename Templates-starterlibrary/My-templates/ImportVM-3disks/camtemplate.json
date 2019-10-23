@@ -1,6 +1,6 @@
 {
-  "name": "Import existing VM with 2 disks - VMware vSphere",
-  "description": "This template can be used to import an existing virtual machine with 2 disks into IBM Cloud Automation Manager.  It can be modified to import a VM with multiple disks.",
+  "name": "Import existing VM with 3 disks - VMware vSphere",
+  "description": "This template can be used to import an existing virtual machine with 3 disks into IBM Cloud Automation Manager.",
   "version": "1.0",
   "imageUrl": "",
   "image": "",
@@ -23,7 +23,7 @@
   },
   "metadata": {
     "providerDisplayName": "VMware vSphere",
-    "longDescription": "This template can be used to import an existing virtual machine with 2 disks into IBM Cloud Automation Manager.  It can be modified to import a VM with multiple disks.",
+    "longDescription": "This template can be used to import an existing virtual machine with 2 disks into IBM Cloud Automation Manager.",
     "bullets": [{
       "title": "Clouds",
       "description": " VMware<br>"},

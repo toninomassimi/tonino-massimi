@@ -23,7 +23,7 @@
   },
   "metadata": {
     "providerDisplayName": "VMware vSphere",
-    "longDescription": "This template can be used to import an existing virtual machine with 2 disks into IBM Cloud Automation Manager.",
+    "longDescription": "This template can be used to import an existing virtual machine with 3 disks into IBM Cloud Automation Manager.",
     "bullets": [{
       "title": "Clouds",
       "description": " VMware<br>"},

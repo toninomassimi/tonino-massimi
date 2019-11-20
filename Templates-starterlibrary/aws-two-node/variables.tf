@@ -7,7 +7,7 @@
 variable "ami" {
   type = "string"
   description = "Generated"
-  default = "ami-b81dbfc5"
+  default = "ami-0a037adb74105f9f6"
 }
 
 variable "instance_type" {
@@ -19,29 +19,29 @@ variable "instance_type" {
 variable "availability_zone" {
   type = "string"
   description = "Generated"
-  default = "us-east-1a"
+  default = "us-east-1b"
 }
 
 variable "aws_key_pair_name" {
   type = "string"
   description = "Generated"
-  default = "cmh-anskey-demo"
+  default = "${input_parameters.aws_key_pair_name}"
 }
 
 variable "vpc_id" {
   type = "string"
   description = "Generated"
-  default = "vpc-6c51be09"
+  default = "vpc-a69f1fc0"
 }
 
 variable "group_name" {
   type = "string"
   description = "Generated"
-  default = "ucdev_secgroup_nva"
+  default = "cam_vmc_sg"
 }
 
 variable "centos-user" {
   type = "string"
-  default = "centos"
+  default = "ubuntu"
 }
 

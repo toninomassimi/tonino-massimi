@@ -77,7 +77,7 @@
       "label": "Aws Key Pair Name",
       "description": "Generated",
       "type": "string",
-      "default": "${input_parameters.aws_key_pair_name}",
+      "default": "tm-key-000",
       "validation": "",
       "group_name": "instances",
       "required": true,

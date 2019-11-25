@@ -25,7 +25,7 @@ variable "availability_zone" {
 variable "aws_key_pair_name" {
   type = "string"
   description = "Generated"
-  default = "${input_parameters.aws_key_pair_name}"
+  default = "tm-key-000"
 }
 
 variable "vpc_id" {

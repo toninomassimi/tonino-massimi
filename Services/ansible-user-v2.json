@@ -1,9 +1,9 @@
 {
   "service": {
-    "version": "2.0.0",
+    "version": "1.0.0.0",
     "specVersion": "v3",
     "catalog_metadata": {
-      "name": "ansible-user",
+      "name": "ansible-user V2",
       "description": "",
       "image": "serviceicon_1.svg",
       "category": "Ansible",
@@ -91,7 +91,9 @@
             "secured": false,
             "description": "Credentials",
             "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
+            "default": "test-ansible-svt-01-inst_tm-creds-aws",
+            "passbyname": false,
+            "dynamicDetails": {}
           },
           {
             "name": "invent",
@@ -104,7 +106,9 @@
             "secured": false,
             "description": "Inventory",
             "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
+            "default": "test-ansible-svt-02-inst_tm-inventory",
+            "passbyname": false,
+            "dynamicDetails": {}
           }
         ],
         "flow": {
@@ -123,8 +127,8 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "test-apt-01-02-inst_tm-inventory",
-                  "credential_name": "test-apt-01-01-inst_tm-creds-aws",
+                  "inventory_name": "${input_parameters.invent}",
+                  "credential_name": "${input_parameters.creds}",
                   "extra_variables": {
                     "test": "ciaociao"
                   }
@@ -146,40 +150,38 @@
           },
           "error_sequence": {}
         },
-        "output_parameters": []
+        "output_parameters": [
+          {
+            "name": "crede",
+            "label": "Credential",
+            "customtype": "string",
+            "type": "string",
+            "immutable": true,
+            "hidden": false,
+            "required": false,
+            "secured": false,
+            "description": "Credential",
+            "default": "${input_parameters.creds}"
+          },
+          {
+            "name": "invento",
+            "label": "Inventory",
+            "customtype": "string",
+            "type": "string",
+            "immutable": true,
+            "hidden": false,
+            "required": false,
+            "secured": false,
+            "description": "Inventory",
+            "default": "${input_parameters.invent}"
+          }
+        ]
       },
       {
         "type": "custom",
         "name": "Create User",
         "description": "Create User",
-        "input_parameters": [
-          {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          }
-        ],
+        "input_parameters": [],
         "flow": {
           "conditions": [],
           "templates": [
@@ -196,8 +198,8 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
                   "extra_variables": {}
                 },
                 "outputs": [
@@ -221,34 +223,7 @@
         "type": "custom",
         "name": "Generate SSHkey",
         "description": "Generate SSH key",
-        "input_parameters": [
-          {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          }
-        ],
+        "input_parameters": [],
         "flow": {
           "conditions": [],
           "templates": [
@@ -265,8 +240,8 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
                   "extra_variables": {}
                 },
                 "outputs": [
@@ -291,33 +266,7 @@
         "description": "Check All Pkgs",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-ans-v2-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-ans-v2-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -355,9 +304,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -379,34 +328,7 @@
         "type": "custom",
         "name": "delete user",
         "description": "delete user",
-        "input_parameters": [
-          {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          }
-        ],
+        "input_parameters": [],
         "flow": {
           "conditions": [],
           "templates": [
@@ -423,14 +345,15 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
                   "extra_variables": {}
                 },
                 "outputs": [
                   "job_status"
                 ],
-                "immutable": false
+                "immutable": false,
+                "isErrorFlow": false
               }
             }
           ],
@@ -448,32 +371,6 @@
         "name": "create user var",
         "description": "create user var",
         "input_parameters": [
-          {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
           {
             "name": "variable_test",
             "label": "Variable Test",
@@ -507,8 +404,8 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
                   "extra_variables": "${input_parameters.variable_test}"
                 },
                 "outputs": [
@@ -534,33 +431,7 @@
         "description": "action to run command apt for test",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -598,9 +469,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -625,33 +496,7 @@
         "description": "Check Nginx",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -689,9 +534,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -715,33 +560,7 @@
         "description": "Check Postgresql",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -779,9 +598,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -805,33 +624,7 @@
         "description": "Check Whois",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -869,9 +662,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -895,33 +688,7 @@
         "description": "Install Nginx",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -959,9 +726,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -985,33 +752,7 @@
         "description": "Install Whois",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -1049,9 +790,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -1075,33 +816,7 @@
         "description": "Install Postgresql",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -1139,9 +854,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -1165,33 +880,7 @@
         "description": "Uninstall Postgresql",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -1229,9 +918,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -1255,33 +944,7 @@
         "description": "Uninstall Whois",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -1319,9 +982,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"
@@ -1345,33 +1008,7 @@
         "description": "Uninstall Nginx",
         "input_parameters": [
           {
-            "name": "creds",
-            "label": "Credentials",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Credentials",
-            "isDynamic": false,
-            "default": "test-apt-01-01-inst_tm-creds-aws"
-          },
-          {
-            "name": "invent",
-            "label": "Inventory",
-            "customtype": "string",
-            "type": "string",
-            "immutable": false,
-            "hidden": false,
-            "required": true,
-            "secured": false,
-            "description": "Inventory",
-            "isDynamic": false,
-            "default": "test-apt-01-02-inst_tm-inventory"
-          },
-          {
-            "name": "variable_test",
+            "name": "variable-apt-v",
             "label": "Variable Test",
             "customtype": "map",
             "type": "map",
@@ -1409,9 +1046,9 @@
                 "cloud_connection_name": "AnsibleTower",
                 "template_data_objects": {},
                 "template_params": {
-                  "inventory_name": "${input_parameters.invent}",
-                  "credential_name": "${input_parameters.creds}",
-                  "extra_variables": "${input_parameters.variable_test}"
+                  "inventory_name": "${svc_instance.output_parameters.invento}",
+                  "credential_name": "${svc_instance.output_parameters.crede}",
+                  "extra_variables": "${input_parameters.variable-apt-v}"
                 },
                 "outputs": [
                   "job_status"

@@ -3,7 +3,7 @@
     "version": "1.0.0.0",
     "specVersion": "v3",
     "catalog_metadata": {
-      "name": "ansible-user V2",
+      "name": "ansible-user",
       "description": "",
       "image": "serviceicon_1.svg",
       "category": "Ansible",

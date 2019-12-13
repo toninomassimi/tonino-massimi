@@ -4,12 +4,12 @@
     "specVersion": "v3",
     "catalog_metadata": {
       "name": "Ansible-VMWare-MongoDB",
-      "description": "",
+      "description": "Deploy MongoDB server on VMWare and Create Ansible Credential and Inventory to run on it Ansible Job Template",
       "image": "serviceicon_1.svg",
       "category": "Tonino",
       "bullets": [],
       "providerDisplayName": "IBM",
-      "longDescription": "",
+      "longDescription": "Provision Action steps:\n- Deploy MongoDB Server (MongoDB on a Single VM on VMware)\n- Create Ansible Credential with User Password\n- Create Ansible Inventory\n- Run ansible job named \"System Information svt new\" to get OS Infos\n- Send e-mail with result\nCustom Action\n- Run ansible job named \"System Information svt new\" to get OS Infos\n- Send e-mail with result",
       "documentationUrl": "",
       "supportUrl": "",
       "bindable": false,
@@ -79,7 +79,48 @@
         "type": "provision",
         "name": "Provision",
         "description": "Default action for deployment of service",
-        "input_parameters": [],
+        "input_parameters": [
+          {
+            "name": "vm_ip",
+            "label": "IP",
+            "customtype": "string",
+            "type": "string",
+            "immutable": false,
+            "hidden": false,
+            "required": true,
+            "secured": false,
+            "isDynamic": false,
+            "default": "9.37.194.18"
+          },
+          {
+            "name": "user",
+            "label": "User",
+            "customtype": "string",
+            "type": "string",
+            "immutable": false,
+            "hidden": false,
+            "required": true,
+            "secured": false,
+            "description": "",
+            "isDynamic": false,
+            "default": "root"
+          },
+          {
+            "name": "password",
+            "label": "Password",
+            "customtype": "password",
+            "type": "password",
+            "immutable": false,
+            "hidden": false,
+            "required": true,
+            "secured": true,
+            "description": "",
+            "isDynamic": false,
+            "default": "^(cGFzc3cwcmQ=)",
+            "passbyname": false,
+            "dynamicDetails": {}
+          }
+        ],
         "flow": {
           "conditions": [],
           "templates": [
@@ -114,7 +155,7 @@
                   "mongodb_vm_root_disk_datastore": "p_ee3c06fe-e9eb-47f1-af41-b5ff4bc73d9b",
                   "mongodb_vm_root_disk_type": "eager_zeroed",
                   "mongodb_vm_ipv4_gateway": "9.37.194.1",
-                  "mongodb_vm_ipv4_address": "9.37.194.18",
+                  "mongodb_vm_ipv4_address": "${input_parameters.vm_ip}",
                   "mongodb_vm_memory": "4096",
                   "mongodb_vm_ipv4_prefix_length": "24",
                   "mongodb_vm_number_of_vcpu": "1",
@@ -124,7 +165,7 @@
                   "mongodb_vm_folder": "CAM-ENV",
                   "mongodb_vm_adapter_type": "vmxnet3",
                   "mongodb_vm_resource_pool": "campool",
-                  "ssh_user": "root",
+                  "ssh_user": "${input_parameters.user}",
                   "ssh_user_password": "^(cGFzc3cwcmQ=)"
                 },
                 "outputs": [
@@ -149,9 +190,9 @@
                 "template_data_objects": {},
                 "template_params": {
                   "credential_name_suffix": "SVT-MongoDB-Creds",
-                  "user_name": "root",
+                  "user_name": "${input_parameters.user}",
                   "ssh_private_key": "",
-                  "password": "^(cGFzc3cwcmQ=)"
+                  "password": "${input_parameters.password}"
                 },
                 "outputs": [
                   "credential_name"
@@ -219,12 +260,108 @@
             }
           ],
           "resthooks": [],
-          "notifications": [],
+          "notifications": [
+            {
+              "emailnotification": {
+                "title": "emailnotification_a4eb41",
+                "type": "email",
+                "receiverList": "tonino.massimi@it.ibm.com",
+                "id": "emailnot2c25438a",
+                "sender": "CAMadmin",
+                "copyToList": "",
+                "subject": "System Information",
+                "body": "Inventory Name\t\t: ${templates.systemin6f36a42b.inventory_name}\nCredential Name\t\t: ${templates.systemin6f36a42b.credential_name}\nExtra Variable\t\t: ${templates.systemin6f36a42b.extra_variables}\nInstance Name\t\t: ${templates.systemin6f36a42b.instance_name}\nTemplate Name\t\t: ${templates.systemin6f36a42b.template_name}\nTemplate Version\t: ${templates.systemin6f36a42b.template_version}\nTitle\t\t\t: ${templates.systemin6f36a42b.title}\nStack ID\t\t: ${templates.systemin6f36a42b.stack_ID}\nAction\t\t\t: ${templates.systemin6f36a42b.action}\nStatus\t\t\t: ${templates.systemin6f36a42b.status}\nStatus Message\t\t: ${templates.systemin6f36a42b.status_message}\nStack Error Msg\t\t: ${templates.systemin6f36a42b.stack_error_message}",
+                "immutable": false
+              }
+            }
+          ],
           "sequence": {
             "0": "mongodbo15cad7df",
             "1": "credenti741f5d15",
             "2": "inventor370f52ee",
-            "3": "systemin6f36a42b"
+            "3": "systemin6f36a42b",
+            "4": "emailnot2c25438a"
+          },
+          "error_sequence": {}
+        },
+        "output_parameters": [
+          {
+            "name": "inventory_name",
+            "label": "inventory_name",
+            "customtype": "string",
+            "type": "string",
+            "immutable": true,
+            "hidden": false,
+            "required": false,
+            "secured": false,
+            "description": "inventory_name",
+            "default": "${templates.inventor370f52ee.output.inventory_name}"
+          },
+          {
+            "name": "credential_name",
+            "label": "credential_name",
+            "customtype": "string",
+            "type": "string",
+            "immutable": true,
+            "hidden": false,
+            "required": false,
+            "secured": false,
+            "description": "credential_name",
+            "default": "${templates.credenti741f5d15.output.credential_name}"
+          }
+        ]
+      },
+      {
+        "type": "custom",
+        "name": "Get System Infos",
+        "description": "Ansible job System Information svt new",
+        "input_parameters": [],
+        "flow": {
+          "conditions": [],
+          "templates": [
+            {
+              "System Information svt new": {
+                "title": "System Information svt new_bfb4ca",
+                "template_name": "System Information svt new",
+                "version": "1.0",
+                "id": "systeminff71b9b7",
+                "template_type": "ANSIBLE",
+                "template_content_type": "ANSIBLE",
+                "template_provider": "ANSIBLE",
+                "instance_name": "",
+                "cloud_connection_name": "AnsibleTower",
+                "template_data_objects": {},
+                "template_params": {
+                  "inventory_name": "${svc_instance.output_parameters.inventory_name}",
+                  "credential_name": "${svc_instance.output_parameters.credential_name}",
+                  "extra_variables": {}
+                },
+                "outputs": [
+                  "job_status"
+                ],
+                "immutable": false
+              }
+            }
+          ],
+          "resthooks": [],
+          "notifications": [
+            {
+              "emailnotification": {
+                "title": "emailnotification_228212",
+                "type": "email",
+                "receiverList": "tonino.massimi@it.ibm.com",
+                "id": "emailnot777304ec",
+                "sender": "CAMadmin",
+                "copyToList": "",
+                "subject": "Result of Ansible job \"System Information svt new\"",
+                "body": "Inventory Name\t\t: ${templates.systeminff71b9b7.inventory_name}\nCredential Name\t\t: ${templates.systeminff71b9b7.credential_name}\nExtra Variable\t\t: ${templates.systeminff71b9b7.extra_variables}\nInstance Name\t\t: ${templates.systeminff71b9b7.instance_name}\nTemplate Name\t\t: ${templates.systeminff71b9b7.template_name}\nTemplate Version\t: ${templates.systeminff71b9b7.template_version}\nTitle\t\t\t: ${templates.systeminff71b9b7.title}\nStack ID\t\t: ${templates.systeminff71b9b7.stack_ID}\nAction\t\t\t: ${templates.systeminff71b9b7.action}\nStatus\t\t\t: ${templates.systeminff71b9b7.status}\nStatus Message\t\t: ${templates.systeminff71b9b7.status_message}\nStack Error Msg\t\t: ${templates.systeminff71b9b7.stack_error_message}",
+                "immutable": false
+              }
+            }
+          ],
+          "sequence": {
+            "0": "systeminff71b9b7",
+            "1": "emailnot777304ec"
           },
           "error_sequence": {}
         },

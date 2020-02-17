@@ -1,5 +1,5 @@
 {
-   "name": "TM MongoDB on a Single VM on VMware V12",
+   "name": "TM MongoDB on a Single VM on VMware",
    "description": "MongoDB - An open-source cross-platform document-oriented database.",
    "version": "1.0",
    "type": "prebuilt",
@@ -37,7 +37,7 @@
        },
        {
          "title": "Software deployed",
-         "description": "<ol class=\"list-numbering\"><li>MongoDB: an open-source cross-platform document-oriented database, classified as NoSQL database</li></ol>"
+         "description": "<ol class=\"list-numbering\"><li>MongoDB: an open-source cross-platform document-oriented database, classified as NoSQL database</li></ol>"
        },
        {
          "title": "Default virtual machine settings",

@@ -272,6 +272,7 @@ if hash iptables 2>/dev/null; then
 	#update firewall
 	iptables -I INPUT 1 -p tcp -m tcp --dport 27017 -m conntrack --ctstate NEW -j ACCEPT     >> $LOGFILE 2>&1 || { echo "---Failed to update firewall---" | tee -a $LOGFILE; exit 1; }
 fi
+
 EOF
 
     destination = "/tmp/installation.sh"

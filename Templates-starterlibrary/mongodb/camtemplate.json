@@ -1,5 +1,5 @@
 {
-   "name": "Tonino MongoDB on a Single VM on VMware",
+   "name": "TM MongoDB on a Single VM on VMware V12",
    "description": "MongoDB - An open-source cross-platform document-oriented database.",
    "version": "1.0",
    "type": "prebuilt",

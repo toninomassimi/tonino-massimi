@@ -1,5 +1,5 @@
 {
-  "name": "SingleVirtualMachine",
+  "name": "TM SingleVirtualMachine",
   "description": "Create Virtual Machine with single vnic",
   "type": "prebuilt",
   "version": "1.0",
@@ -20,7 +20,7 @@
     }
   },
   "metadata": {
-      "displayName": "SingleVirtualMachine",
+      "displayName": "TM SingleVirtualMachine",
       "longDescription": "Create Virtual Machine with single vnic on a network label by cloning",
       "bullets": [
        {

@@ -30,7 +30,7 @@
               "TMax Amazon EC2 Virtual Server with SSH key": {
                 "title": "TMax Amazon EC2 Virtual Server with SSH key_6859fd",
                 "template_name": "TMax Amazon EC2 Virtual Server with SSH key",
-                "version": "v1.0.0",
+                "version": "1.0.0.0",
                 "id": "tmaxamaze7fff1bc",
                 "template_type": "Terraform",
                 "template_content_type": "Amazon EC2",

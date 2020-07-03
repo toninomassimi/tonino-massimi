@@ -273,9 +273,9 @@
                     "connection_name": "NSX-T_ago"
                   }
                 ],
-                "cloud_connection_name": "NSX-T_ago",
                 "provider_engine_version": "0.11.11",
-                "isErrorFlow": false
+                "isErrorFlow": false,
+                "cloud_connection_name": "NSX-T_ago"
               }
             },
             {
@@ -306,11 +306,11 @@
                 "cloud_connection_names": [
                   {
                     "provider": "Amazon EC2",
-                    "connection_name": "EC2_ago"
+                    "connection_name": "AWS"
                   }
                 ],
                 "provider_engine_version": "0.11.11",
-                "cloud_connection_name": "EC2_ago"
+                "cloud_connection_name": "AWS"
               }
             },
             {
@@ -341,11 +341,11 @@
                 "cloud_connection_names": [
                   {
                     "provider": "Amazon EC2",
-                    "connection_name": "EC2_ago"
+                    "connection_name": "AWS"
                   }
                 ],
                 "provider_engine_version": "0.11.11",
-                "cloud_connection_name": "EC2_ago"
+                "cloud_connection_name": "AWS"
               }
             },
             {
@@ -376,11 +376,11 @@
                 "cloud_connection_names": [
                   {
                     "provider": "Amazon EC2",
-                    "connection_name": "EC2_ago"
+                    "connection_name": "AWS"
                   }
                 ],
-                "cloud_connection_name": "EC2_ago",
-                "provider_engine_version": "0.11.11"
+                "provider_engine_version": "0.11.11",
+                "cloud_connection_name": "AWS"
               }
             }
           ],

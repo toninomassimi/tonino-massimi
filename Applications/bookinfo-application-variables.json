@@ -1,0 +1,14 @@
+{
+  "name": "ns",
+  "label": "NS",
+  "customtype": "string",
+  "type": "string",
+  "immutable": false,
+  "hidden": false,
+  "required": true,
+  "secured": false,
+  "description": "NS Bookinfo",
+  "isDynamic": false,
+  "permission": "Read-Write",
+  "default": "bookinfo-h1"
+}

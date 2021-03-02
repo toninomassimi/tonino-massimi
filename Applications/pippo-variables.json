@@ -1,0 +1,35 @@
+{
+  "input_parameters": [
+    {
+      "name": "ns",
+      "label": "NS",
+      "customtype": "string",
+      "type": "string",
+      "immutable": false,
+      "hidden": false,
+      "required": true,
+      "secured": false,
+      "description": "NS",
+      "isDynamic": false,
+      "permission": "Read-Write",
+      "default": "bookinfo-h1"
+    },
+    {
+      "name": "cluster-name",
+      "label": "Cluster Name",
+      "customtype": "string",
+      "type": "string",
+      "immutable": false,
+      "hidden": false,
+      "required": true,
+      "secured": false,
+      "description": "Cluster Name",
+      "isDynamic": true,
+      "permission": "Read-Write",
+      "dynamicDetails": {
+        "provider": "CloudPak For Multicloud management",
+        "assetType": "cluster"
+      }
+    }
+  ]
+}

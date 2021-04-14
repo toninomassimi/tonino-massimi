@@ -1,0 +1,644 @@
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: app-bookinfo-app
+  namespace: bookinfo-h4-project
+spec:
+  selector:
+    matchExpressions:
+    - key: purpose
+      operator: In
+      values:
+      - icam-demo
+  componentKinds:
+  - group: apps.open-cluster-management.io
+    kind: Subscription
+---
+# 01-productpage-deployable.yaml
+# Source: bookinfo/charts/productpage/templates/service.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-productpage-svc-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: productpage
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: productpage
+      annotations:
+        mcm.ibm.com/service-discovery: "{}"
+      labels:
+        app.kubernetes.io/name: productpage
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      ports:
+        - port: 9080
+          targetPort: http
+          protocol: TCP
+          name: http
+      type: NodePort
+      selector:
+        app.kubernetes.io/name: productpage
+        app.kubernetes.io/instance: bookinfo-demo
+---
+# Source: bookinfo/charts/productpage/templates/deployment.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-productpage-deploy-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: productpage
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: bookinfo-demo-productpage
+      labels:
+        runtime: python
+        app.kubernetes.io/name: productpage
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: productpage
+          app.kubernetes.io/instance: bookinfo-demo
+      template:
+        metadata:
+          labels:
+            runtime: python
+            app.kubernetes.io/name: productpage
+            app.kubernetes.io/instance: bookinfo-demo
+        spec:
+          containers:
+            - env:
+              - name: OPENTRACING_ENABLED
+                value: "true"
+              - name: JAEGER_SAMPLER_TYPE
+                value: "probabilistic"
+              - name: JAEGER_SAMPLER_PARAM
+                value: "1"
+              - name: LATENCY_SAMPLER_PARAM
+                value: "1"
+              name: productpage
+              image: "docker.io/dymaczew/examples-bookinfo-productpage-v1:2020.2.1"
+              imagePullPolicy: IfNotPresent
+              ports:
+                - name: http
+                  containerPort: 9080
+                  protocol: TCP
+              livenessProbe:
+                tcpSocket:
+                  port: 9080
+              readinessProbe:
+                tcpSocket:
+                  port: 9080
+              resources:
+                {}
+---
+# Source: bookinfo/templates/ingress.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-ingress-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: productpage
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: networking.k8s.io/v1beta1
+    kind: Ingress
+    metadata:
+      name: bookinfo-ingress
+      annotations:
+        mcm.ibm.com/service-discovery: "{}"
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      labels:
+        app.kubernetes.io/name: bookinfo
+        app.kubernetes.io/instance: bookinfo-demo
+      spec:
+      backend:
+        serviceName: productpage
+        servicePort: 9080
+---
+# 02-details-deployable.yaml
+# Source: bookinfo/charts/details/templates/service.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-details-svc-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: details
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: details
+      annotations:
+        mcm.ibm.com/service-discovery: "{}"
+      labels:
+        app.kubernetes.io/name: details
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      ports:
+        - port: 9080
+          targetPort: http
+          protocol: TCP
+          name: http
+      selector:
+        app.kubernetes.io/name: details
+        app.kubernetes.io/instance: bookinfo-demo
+---
+# Source: bookinfo/charts/details/templates/deployment.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-details-deploy-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: details
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: bookinfo-demo-details
+      labels:
+        runtime: go
+        app.kubernetes.io/name: details
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: details
+          app.kubernetes.io/instance: bookinfo-demo
+      template:
+        metadata:
+          labels:
+            runtime: go
+            app.kubernetes.io/name: details
+            app.kubernetes.io/instance: bookinfo-demo
+        spec:
+          containers:
+            - env:
+              - name: OPENTRACING_ENABLED
+                value: "true"
+              - name: JAEGER_SAMPLER_TYPE
+                value: "probabilistic"
+              - name: JAEGER_SAMPLER_PARAM
+                value: "1"
+              - name: LATENCY_SAMPLER_PARAM
+                value: "1"
+              name: details
+              image: "docker.io/dymaczew/examples-bookinfo-details-v1:2020.2.1"
+              imagePullPolicy: Always
+              ports:
+                - name: http
+                  containerPort: 9080
+                  protocol: TCP
+              livenessProbe:
+                httpGet:
+                  path: /health
+                  port: http
+              readinessProbe:
+                httpGet:
+                  path: /health
+                  port: http
+              resources:
+                {}
+---
+# 03-reviews-deployable.yaml
+# Source: bookinfo/charts/reviews/templates/service.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-reviews-svc-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: reviews
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: reviews
+      annotations:
+        mcm.ibm.com/service-discovery: "{}"
+      labels:
+        app.kubernetes.io/name: reviews
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      ports:
+        - port: 9080
+          targetPort: http
+          protocol: TCP
+          name: http
+      selector:
+        app.kubernetes.io/name: reviews
+        app.kubernetes.io/instance: bookinfo-demo
+---
+# Source: bookinfo/charts/reviews/templates/deployment.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-reviews-deploy-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: reviews
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: bookinfo-demo-reviews
+      labels:
+        runtime: liberty
+        app.kubernetes.io/name: reviews
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: reviews
+          app.kubernetes.io/instance: bookinfo-demo
+      template:
+        metadata:
+          labels:
+            runtime: liberty
+            app.kubernetes.io/name: reviews
+            app.kubernetes.io/instance: bookinfo-demo
+        spec:
+          containers:
+            - env:
+              - name: OPENTRACING_ENABLED
+                value: "true"
+              - name: JAEGER_SAMPLER_TYPE
+                value: "probabilistic"
+              - name: JAEGER_SAMPLER_PARAM
+                value: "1"
+              - name: LATENCY_SAMPLER_PARAM
+                value: "1"
+              name: reviews
+              image: "docker.io/dymaczew/examples-bookinfo-reviews-v3:2020.2.1"
+              imagePullPolicy: Always
+              ports:
+                - name: http
+                  containerPort: 9080
+                  protocol: TCP
+              livenessProbe:
+                httpGet:
+                  path: /health
+                  port: http
+                initialDelaySeconds: 120
+                failureThreshold: 6
+              readinessProbe:
+                httpGet:
+                  path: /health
+                  port: http
+                initialDelaySeconds: 120
+                failureThreshold: 10
+              resources:
+                {}
+          securityContext:
+---
+# 04-ratings-deployable.yaml
+# Source: bookinfo/charts/ratings/templates/service.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-ratings-svc-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: ratings
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        mcm.ibm.com/service-discovery: "{}"
+      name: ratings
+      labels:
+        app.kubernetes.io/name: ratings
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      ports:
+        - port: 9080
+          targetPort: http
+          protocol: TCP
+          name: http
+      selector:
+        app.kubernetes.io/name: ratings
+        app.kubernetes.io/instance: bookinfo-demo
+---
+# Source: bookinfo/charts/ratings/templates/deployment.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-ratings-deploy-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: ratings
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: bookinfo-demo-ratings
+      labels:
+        runtime: node
+        app.kubernetes.io/name: ratings
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: ratings
+          app.kubernetes.io/instance: bookinfo-demo
+      template:
+        metadata:
+          labels:
+            runtime: node
+            app.kubernetes.io/name: ratings
+            app.kubernetes.io/instance: bookinfo-demo
+        spec:
+          containers:
+            - env:
+              - name: DB_TYPE
+                value: mysql
+              - name: MYSQL_DB_HOST
+                value: mysqldb
+              - name: MYSQL_DB_PORT
+                value: "3306"
+              - name: MYSQL_DB_USER
+                value: root
+              - name: MYSQL_DB_PASSWORD
+                value: password
+              - name: OPENTRACING_ENABLED
+                value: "true"
+              - name: JAEGER_SAMPLER_TYPE
+                value: probabilistic
+              - name: OPENTRACING_SAMPLER
+                value: "1"
+              - name: LATENCY_SAMPLER_PARAM
+                value: "1"
+              - name: SERVICE_VERSION
+                value: "v-delayed"
+              name: ratings
+              image: "docker.io/dymaczew/examples-bookinfo-ratings-v2:2020.2.1"
+              imagePullPolicy: IfNotPresent
+              ports:
+                - name: http
+                  containerPort: 9080
+                  protocol: TCP
+              livenessProbe:
+                httpGet:
+                  path: /health
+                  port: http
+              readinessProbe:
+                httpGet:
+                  path: /health
+                  port: http
+              resources:
+                {}
+---
+# 05-mysqldb-deployable.yaml
+# Source: bookinfo/charts/mysqldb/templates/secret.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-mysqldb-secret-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: mysqldb
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: mysql-credentials
+      namespace: bookinfo-h4
+    type: Opaque
+    data:
+      rootpasswd: cGFzc3dvcmQ=
+---
+# Source: bookinfo/charts/mysqldb/templates/service.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-mysqldb-svc-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: mysqldb
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: mysqldb
+      annotations:
+        mcm.ibm.com/service-discovery: "{}"
+      labels:
+        app.kubernetes.io/name: mysqldb
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      ports:
+        - port: 3306
+          protocol: TCP
+          name: tcp
+      selector:
+        app.kubernetes.io/name: mysqldb
+        app.kubernetes.io/instance: bookinfo-demo
+---
+# Source: bookinfo/charts/mysqldb/templates/deployment.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: app-bookinfo-mysqldb-deploy-deployable
+  namespace: bookinfo-h4-source
+  labels:
+    appname: bookinfo-demo
+    release: bookinfo-demo
+    component: mysqldb
+    prereq: "no"
+    apps.open-cluster-management.io/channel: app-bookinfo-ns-channel
+    apps.open-cluster-management.io/channel-type: Namespace
+spec:
+  template:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: bookinfo-demo-mysqldb
+      labels:
+        app.kubernetes.io/name: mysqldb
+        app.kubernetes.io/instance: bookinfo-demo
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: mysqldb
+          app.kubernetes.io/instance: bookinfo-demo
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: mysqldb
+            app.kubernetes.io/instance: bookinfo-demo
+        spec:
+          containers:
+            - name: mysqldb
+              image: "docker.io/dymaczew/examples-bookinfo-mysqldb:latest"
+              imagePullPolicy: Always
+              ports:
+                - name: http
+                  containerPort: 3306
+                  protocol: TCP
+              resources:
+                {}
+              env:
+                - name: MYSQL_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-credentials
+                      key: rootpasswd
+---
+# 06-app-bookinfo-ns-channel.yaml
+# Create a Channel that declares resources that can be deployed
+# Channel can be a Namespace, Object Store Bucket, or Helm Repo
+apiVersion: apps.open-cluster-management.io/v1
+kind: Channel
+metadata:
+  name: app-bookinfo-ns-channel
+  namespace: bookinfo-h4-source
+  labels:
+    purpose: icam-demo
+    appname: bookinfo-demo
+spec:
+  type: Namespace
+  pathname: bookinfo-h4-source
+---
+# 07-bookinfo-placementrules.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: app-bookinfo-rule
+  namespace: bookinfo-h4-project
+  generation: 1
+  labels:
+    purpose: icam-demo
+spec:
+  clusterSelector:
+    matchLabels:
+      name: wofat-cluster
+  clusterReplicas: 1
+---
+# 08-bookinfo-multicluster.yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  labels:
+    purpose: icam-demo
+  name: app-bookinfo-subscription
+  namespace: bookinfo-h4-project
+spec:
+  channel: bookinfo-h4-project/app-bookinfo-ns-channel
+  packageFilter:
+    labelSelector:
+      matchLabels:
+        appname: bookinfo-demo
+  placement:
+    placementRef:
+      name: app-bookinfo-rule
+      kind: PlacementRule
+  overrides:
+  - clusterName: "/"
+    clusterOverrides:
+    - path: "metadata.namespace"
+      value: bookinfo-h4

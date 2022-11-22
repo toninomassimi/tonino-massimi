@@ -1,22 +1,11 @@
 {
-    "glossary": {
-        "title": "example glossary",
-		"GlossDiv": {
-            "title": "S",
-			"GlossList": {
-                "GlossEntry": {
-                    "ID": "SGML",
-					"SortAs": "SGML",
-					"GlossTerm": "Standard Generalized Markup Language",
-					"Acronym": "SGML",
-					"Abbrev": "ISO 8879:1986",
-					"GlossDef": {
-                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
-						"GlossSeeAlso": ["GML", "XML"]
-                    },
-					"GlossSee": "markup"
-                }
-            }
-        }
-    }
+   "name":"@hdm/akora-app-rba",
+   "version":"1.28.18",
+   "akoraServer":{
+      "name":"@hdm/akora-server",
+      "version":"16.0.0"
+   },
+   "commit":"bdad1b689c15af93192a46666a1d42254615c115",
+   "branch":"HEAD",
+   "timestamp":"2022-09-09T08:32+0000"
 }
